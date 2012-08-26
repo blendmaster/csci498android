@@ -4,5 +4,6 @@
     <string name="hello_world">\'Sup world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">\'Sup World!</string>
+    <string name="edit_message">Type something cool!</string>
 
 </resources>
