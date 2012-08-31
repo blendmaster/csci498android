@@ -16,7 +16,8 @@
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/name_" />
+            android:text="@string/name_"
+            android:textStyle="italic" />
 
         <EditText
             android:id="@+id/name"
@@ -40,7 +41,8 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/address_" />
+            android:text="@string/address_"
+            android:textStyle="italic" />
 
         <EditText
             android:id="@+id/address"
@@ -54,6 +56,7 @@
 
     <Button
         android:id="@+id/save"
+        style="@android:style/Widget.DeviceDefault.ActionButton.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
