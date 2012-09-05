@@ -16,5 +16,8 @@ gen/
 local.properties
 
 # Eclipse project files
-.classpath
-.project
+# Checking into the repo so I can import projects on different machines.
+# Internet seems conflicted on whether this is good or not.
+#
+#.classpath
+#.project
