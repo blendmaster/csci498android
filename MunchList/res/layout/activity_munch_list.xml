@@ -4,13 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ListView
+    <fragment
         android:id="@+id/restaurants"
-        android:layout_width="match_parent"
+        android:name="csci498.strupper.munchlist.RestaurantsList"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/details" >
-
-    </ListView>
+        android:layout_above="@+id/details"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        tools:layout="@layout/restaurant_row" />
 
     <fragment
         android:id="@+id/details"
