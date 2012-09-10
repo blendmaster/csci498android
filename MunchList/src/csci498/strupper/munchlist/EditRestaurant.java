@@ -17,7 +17,7 @@ public class EditRestaurant extends Fragment {
   public View onCreateView(LayoutInflater inflater,
                            ViewGroup container,
                            Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.edit_restaurant, container);
+    return inflater.inflate(R.layout.edit_restaurant, container, false);
   }
 
   public interface SaveRestaurantListener {
