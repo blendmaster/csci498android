@@ -1,5 +1,7 @@
 package csci498.strupper.munchlist;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -98,6 +100,32 @@ public class MunchList extends Activity implements EditRestaurant.SaveRestaurant
 }
 
   private int progress = 0;
+  AtomicBoolean isActive = new AtomicBoolean(true);
+
+  private final Runnable task = new Runnable() {
+    public void run() {
+      while (isActive.get() && progress < 10000) {
+        runOnUiThread(new Runnable() {
+          public void run() { // I never asked for this ;_;
+            setProgress(progress += 20);
+          }
+        });
+        try {
+          Thread.sleep(10);
+        } catch (InterruptedException e) {
+          // oh the humanity
+        }
+      }
+      if (isActive.get()) {
+        runOnUiThread(new Runnable() {
+          public void run() {
+            setProgressBarVisibility(false);
+            progress = 0;
+          }
+        });
+      }
+    }
+  };
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
@@ -106,32 +134,30 @@ public class MunchList extends Activity implements EditRestaurant.SaveRestaurant
     // a specific item?
     switch (item.getItemId()) {
     case R.id.longtask:
-      setProgressBarVisibility(true);
-      progress = 0;
-      new Thread(new Runnable() {
-        public void run() {
-          while (progress < 10000) {
-            runOnUiThread(new Runnable() {
-              public void run() { // I never asked for this ;_;
-                setProgress(progress += 20);
-              }
-            });
-            try {
-              Thread.sleep(10);
-            } catch (InterruptedException e) {
-              // oh the humanity
-            }
-          }
-          runOnUiThread(new Runnable() {
-            public void run() {
-              setProgressBarVisibility(false);
-            }
-          });
-        }
-      }).start();
+
+      startWork();
       return true;
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void startWork() {
+    setProgressBarVisibility(true);
+    new Thread(task).start();
+
+  }
+
+  @Override public void onPause() {
+    super.onPause();
+    isActive.set(false);
+  }
+
+  @Override public void onResume() {
+    super.onResume();
+    isActive.set(true);
+    if (progress > 0) {
+      startWork();
+    }
   }
 }
