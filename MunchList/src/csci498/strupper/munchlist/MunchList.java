@@ -7,6 +7,8 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.Window;
 
 public class MunchList extends Activity implements EditRestaurant.SaveRestaurantListener {
 
@@ -14,6 +16,7 @@ public class MunchList extends Activity implements EditRestaurant.SaveRestaurant
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     //setContentView(R.layout.activity_munch_list);
+    requestWindowFeature(Window.FEATURE_PROGRESS);
 
     // setup action bar for tabs
     ActionBar actionBar = getActionBar();
@@ -93,4 +96,42 @@ public class MunchList extends Activity implements EditRestaurant.SaveRestaurant
         // User selected the already selected tab. Usually do nothing.
     }
 }
+
+  private int progress = 0;
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    // doesn't this sort of overall event handler with a switch statement
+    // seem really archaic? Why can't I just attach a closure (if only) to
+    // a specific item?
+    switch (item.getItemId()) {
+    case R.id.longtask:
+      setProgressBarVisibility(true);
+      progress = 0;
+      new Thread(new Runnable() {
+        public void run() {
+          while (progress < 10000) {
+            runOnUiThread(new Runnable() {
+              public void run() { // I never asked for this ;_;
+                setProgress(progress += 20);
+              }
+            });
+            try {
+              Thread.sleep(10);
+            } catch (InterruptedException e) {
+              // oh the humanity
+            }
+          }
+          runOnUiThread(new Runnable() {
+            public void run() {
+              setProgressBarVisibility(false);
+            }
+          });
+        }
+      }).start();
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
 }
