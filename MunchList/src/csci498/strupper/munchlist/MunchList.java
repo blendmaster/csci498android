@@ -14,32 +14,43 @@ import android.view.Window;
 
 public class MunchList extends Activity implements EditRestaurant.SaveRestaurantListener {
 
+  private RestaurantHelper helper;
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    //setContentView(R.layout.activity_munch_list);
     requestWindowFeature(Window.FEATURE_PROGRESS);
 
     // setup action bar for tabs
-    ActionBar actionBar = getActionBar();
-    actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-    actionBar.setDisplayShowTitleEnabled(false);
+    {
+      ActionBar actionBar = getActionBar();
+      actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+      actionBar.setDisplayShowTitleEnabled(false);
 
-    Tab tab = actionBar.newTab()
-                 .setText("Restaurants")
-                 .setTabListener(
-                  new TabListener<RestaurantsList>(this,
-                                                   "list",
-                                                   RestaurantsList.class));
-    actionBar.addTab(tab);
+      Tab tab =
+          actionBar.newTab()
+                   .setText("Restaurants")
+                   .setTabListener(new TabListener<RestaurantsList>(this,
+                                                                    "list",
+                                                                    RestaurantsList.class));
+      actionBar.addTab(tab);
 
-    tab = actionBar.newTab()
-                 .setText("Details")
-                 .setTabListener(
-                 new TabListener<EditRestaurant>(this,
-                                                 "details",
-                                                 EditRestaurant.class));
-    actionBar.addTab(tab);
+      tab =
+          actionBar.newTab()
+                   .setText("Details")
+                   .setTabListener(
+                                   new TabListener<EditRestaurant>(this,
+                                                                   "details",
+                                                                   EditRestaurant.class));
+      actionBar.addTab(tab);
+    }
+
+    helper = new RestaurantHelper(this);
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    helper.close();
   }
 
   @Override
@@ -49,11 +60,8 @@ public class MunchList extends Activity implements EditRestaurant.SaveRestaurant
   }
 
   public void onRestaurantSave(Restaurant r) {
-//        ((RestaurantsList)getFragmentManager()
-//                         .findFragmentById(R.id.restaurants))
-//                         .add(r);
+    helper.insert(r);
   }
-
 
   // from http://developer.android.com/guide/topics/ui/actionbar.html
   public static class TabListener<T extends Fragment> implements ActionBar.TabListener {

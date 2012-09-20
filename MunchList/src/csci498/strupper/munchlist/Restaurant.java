@@ -6,6 +6,15 @@ public class Restaurant {
   private String address = "";
   private String type = "";
 
+  public Restaurant() { }
+
+  public Restaurant(String name, String address, String type) {
+    super();
+    this.name = name;
+    this.address = address;
+    this.type = type;
+  }
+
   public String getType() {
     return type;
   }

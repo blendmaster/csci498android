@@ -1,19 +1,18 @@
 package csci498.strupper.munchlist;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.ListFragment;
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class RestaurantsList extends ListFragment {
-  List<Restaurant> restaurants = new ArrayList<Restaurant>();
   RestaurantAdapter adapter;
+  private RestaurantHelper helper;
 
   static class RestaurantHolder {
     private final TextView name, address;
@@ -23,35 +22,30 @@ public class RestaurantsList extends ListFragment {
       address = (TextView)row.findViewById(R.id.address);
     }
 
-    void populateFrom(Restaurant r) {
+    void populateFrom(Cursor c) {
+      Restaurant r = RestaurantHelper.restaurantOf(c);
       name.setText(r.getName());
       address.setText(r.getAddress());
     }
   }
 
-  class RestaurantAdapter extends ArrayAdapter<Restaurant> {
-    public RestaurantAdapter() {
-      super(getActivity(),
-            android.R.layout.simple_list_item_1,
-            restaurants);
+  class RestaurantAdapter extends CursorAdapter {
+    public RestaurantAdapter(Cursor c) {
+      super(getActivity(), c, true);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-      View row = convertView;
-      RestaurantHolder holder;
+    public void bindView(View row, Context context, Cursor c) {
+      ((RestaurantHolder)row.getTag()).populateFrom(c);
 
-      if (row == null) {
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        row = inflater.inflate(R.layout.restaurant_row, null);
-        holder = new RestaurantHolder(row);
-        row.setTag(holder);
-      } else {
-        holder = (RestaurantHolder)row.getTag();
-      }
+    }
 
-      holder.populateFrom(restaurants.get(position));
-
+    @Override
+    public View newView(Context context, Cursor c, ViewGroup parent) {
+      LayoutInflater inflater = getActivity().getLayoutInflater();
+      View row = inflater.inflate(R.layout.restaurant_row, null);
+      RestaurantHolder holder = new RestaurantHolder(row);
+      row.setTag(holder);
       return row;
     }
   }
@@ -60,12 +54,8 @@ public class RestaurantsList extends ListFragment {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    adapter = new RestaurantAdapter();
+    helper = new RestaurantHelper(getActivity());
+    adapter = new RestaurantAdapter(helper.getAll());
     setListAdapter(adapter);
   }
-
-  public void add(Restaurant r) {
-    adapter.add(r);
-  }
-
 }
