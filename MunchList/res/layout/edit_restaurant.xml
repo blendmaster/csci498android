@@ -1,91 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    
-    <TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" >
+
+        <TableLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/name_"
-                android:textStyle="italic" />
-
-            <EditText
-                android:id="@+id/name"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:inputType="textCapWords" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/address_"
-                android:textStyle="italic" />
-
-            <EditText
-                android:id="@+id/address"
-                android:layout_width="0dip"
-                android:layout_height="wrap_content"
-                android:inputType="textCapWords|textPostalAddress" />
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/type_"
-                android:textStyle="italic" />
-
-            <RadioGroup
-                android:id="@+id/types"
+            <TableRow
+                android:id="@+id/tableRow1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" >
 
-                <RadioButton
-                    android:id="@+id/take_out"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/take_out" />
+                    android:text="@string/name_"
+                    android:textStyle="italic" />
 
-                <RadioButton
-                    android:id="@+id/sit_down"
-                    android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="0dip"
                     android:layout_height="wrap_content"
-                    android:text="@string/sit_down" />
+                    android:layout_weight="1"
+                    android:inputType="textCapWords" />
+            </TableRow>
 
-                <RadioButton
-                    android:id="@+id/delivery"
-                    android:layout_width="match_parent"
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/delivery" />
-            </RadioGroup>
-        </TableRow>
+                    android:text="@string/address_"
+                    android:textStyle="italic" />
+
+                <EditText
+                    android:id="@+id/address"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapWords|textPostalAddress" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/type_"
+                    android:textStyle="italic" />
+
+                <RadioGroup
+                    android:id="@+id/types"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <RadioButton
+                        android:id="@+id/take_out"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/take_out" />
+
+                    <RadioButton
+                        android:id="@+id/sit_down"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sit_down" />
+
+                    <RadioButton
+                        android:id="@+id/delivery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/delivery" />
+                </RadioGroup>
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
         <Button
             android:id="@+id/save"
             style="@android:style/Widget.DeviceDefault.ActionButton.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_alignParentRight="true"
             android:text="@string/save" />
 
-</TableLayout>
+    </RelativeLayout>
+
+</LinearLayout>
