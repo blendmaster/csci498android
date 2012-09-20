@@ -1,7 +1,5 @@
 package csci498.strupper.munchlist;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -9,8 +7,6 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.Window;
 
 public class MunchList extends Activity implements EditRestaurant.SaveRestaurantListener {
 
@@ -19,8 +15,6 @@ public class MunchList extends Activity implements EditRestaurant.SaveRestaurant
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    requestWindowFeature(Window.FEATURE_PROGRESS);
-
     // setup action bar for tabs
     {
       ActionBar actionBar = getActionBar();
@@ -104,68 +98,6 @@ public class MunchList extends Activity implements EditRestaurant.SaveRestaurant
 
     public void onTabReselected(Tab tab, FragmentTransaction ft) {
         // User selected the already selected tab. Usually do nothing.
-    }
-}
-
-  private int progress = 0;
-  AtomicBoolean isActive = new AtomicBoolean(true);
-
-  private final Runnable task = new Runnable() {
-    public void run() {
-      while (isActive.get() && progress < 10000) {
-        runOnUiThread(new Runnable() {
-          public void run() { // I never asked for this ;_;
-            setProgress(progress += 20);
-          }
-        });
-        try {
-          Thread.sleep(10);
-        } catch (InterruptedException e) {
-          // oh the humanity
-        }
-      }
-      if (isActive.get()) {
-        runOnUiThread(new Runnable() {
-          public void run() {
-            setProgressBarVisibility(false);
-            progress = 0;
-          }
-        });
-      }
-    }
-  };
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // doesn't this sort of overall event handler with a switch statement
-    // seem really archaic? Why can't I just attach a closure (if only) to
-    // a specific item?
-    switch (item.getItemId()) {
-    case R.id.longtask:
-
-      startWork();
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
-
-  private void startWork() {
-    setProgressBarVisibility(true);
-    new Thread(task).start();
-
-  }
-
-  @Override public void onPause() {
-    super.onPause();
-    isActive.set(false);
-  }
-
-  @Override public void onResume() {
-    super.onResume();
-    isActive.set(true);
-    if (progress > 0) {
-      startWork();
     }
   }
 }

@@ -11,6 +11,5 @@
         android:showAsAction="always|withText"
         android:title="Add Restaurant" android:titleCondensed="Add">
     </item>
-    <item android:id="@+id/longtask" android:titleCondensed="Run" android:title="Run Long Task"></item>
 
 </menu>
