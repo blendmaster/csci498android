@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 public class EditRestaurant extends Fragment {
@@ -40,6 +41,27 @@ public class EditRestaurant extends Fragment {
   public void onViewCreated(final View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
+    // restore form
+    if (savedInstanceState != null) {
+      String s;
+      if ((s = savedInstanceState.getString("name")) != null) {
+        ((EditText)getActivity().findViewById(R.id.name)).setText(s);
+      }
+      if ((s = savedInstanceState.getString("address")) != null) {
+        ((EditText)getActivity().findViewById(R.id.address)).setText(s);
+      }
+      if ((s = savedInstanceState.getString("type")) != null) {
+        if (s.equals("sit_down")) {
+          ((RadioButton)getActivity().findViewById(R.id.sit_down)).setChecked(true);
+        } else if (s.equals("take_out")) {
+          ((RadioButton)getActivity().findViewById(R.id.take_out)).setChecked(true);
+        } else if (s.equals("delivery")) {
+          ((RadioButton)getActivity().findViewById(R.id.delivery)).setChecked(true);
+        }
+      }
+    }
+
+    /// attach save listener
     Button save = (Button)view.findViewById(R.id.save);
     save.setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
@@ -69,4 +91,21 @@ public class EditRestaurant extends Fragment {
     });
   }
 
+  @Override public void onSaveInstanceState(Bundle outState) {
+    Activity a = getActivity();
+    outState.putString("name", ((EditText)a.findViewById(R.id.name)).getText().toString());
+    outState.putString("address", ((EditText)a.findViewById(R.id.address)).getText().toString());
+    RadioGroup types = (RadioGroup)a.findViewById(R.id.types);
+    switch (types.getCheckedRadioButtonId()) {
+    case R.id.sit_down:
+      outState.putString("type", "sit_down");
+      break;
+    case R.id.take_out:
+      outState.putString("type", "take_out");
+      break;
+    case R.id.delivery:
+      outState.putString("type", "delivery");
+      break;
+    }
+  }
 }
