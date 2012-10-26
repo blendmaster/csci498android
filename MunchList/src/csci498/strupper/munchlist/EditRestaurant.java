@@ -1,6 +1,7 @@
 package csci498.strupper.munchlist;
 
 import android.app.Activity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,12 +13,19 @@ import android.widget.RadioGroup;
 public class EditRestaurant extends Activity {
 
   private RestaurantHelper helper;
+  private String restaurantId;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     helper = new RestaurantHelper(this);
+
+    restaurantId = getIntent().getStringExtra(MunchList.ID_EXTRA);
+
+    if (restaurantId != null) {
+      load();
+    }
 
     // restore form
     if (savedInstanceState != null) {
@@ -69,6 +77,28 @@ public class EditRestaurant extends Activity {
     });
   }
 
+  private void setFrom(Restaurant r) {
+    ((EditText)findViewById(R.id.name)).setText(r.getName());
+    ((EditText)findViewById(R.id.address)).setText(r.getAddress());
+    RadioGroup types = (RadioGroup)findViewById(R.id.types);
+    if (r.getType().equals("sit_down")) {
+      types.check(R.id.sit_down);
+    }
+    else if (r.getType().equals("take_out")) {
+      types.check(R.id.take_out);
+    }
+    else {
+      types.check(R.id.delivery);
+    }
+  }
+
+  private void load() {
+    Cursor c = helper.getById(restaurantId);
+    c.moveToFirst();
+    setFrom(RestaurantHelper.restaurantOf(c));
+    c.close();
+  }
+
   @Override public void onSaveInstanceState(Bundle outState) {
     outState
       .putString("name",
@@ -89,4 +119,11 @@ public class EditRestaurant extends Activity {
       break;
     }
   }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    helper.close();
+  }
+
 }
