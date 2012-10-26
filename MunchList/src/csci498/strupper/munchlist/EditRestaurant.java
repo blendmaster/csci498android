@@ -18,6 +18,7 @@ public class EditRestaurant extends Activity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setContentView(R.layout.edit_restaurant);
 
     helper = new RestaurantHelper(this);
 
@@ -56,14 +57,14 @@ public class EditRestaurant extends Activity {
     save.setOnClickListener(new OnClickListener() {
       public void onClick(View v) {
         Restaurant r = new Restaurant();
-        r.setName(((EditText)v.findViewById(R.id.name))
+        r.setName(((EditText)findViewById(R.id.name))
                   .getText()
                   .toString());
-        r.setAddress(((EditText)v.findViewById(R.id.address))
+        r.setAddress(((EditText)findViewById(R.id.address))
                      .getText()
                      .toString());
 
-        RadioGroup types = (RadioGroup)v.findViewById(R.id.types);
+        RadioGroup types = (RadioGroup)findViewById(R.id.types);
         switch (types.getCheckedRadioButtonId()) {
         case R.id.sit_down:
           r.setType("sit_down");

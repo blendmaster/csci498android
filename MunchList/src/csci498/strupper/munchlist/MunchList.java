@@ -70,6 +70,13 @@ public class MunchList extends ListActivity {
     helper.close();
   }
 
+  @Override protected void onResume() {
+    super.onResume();
+    // refresh list
+    adapter = new RestaurantAdapter(helper.getAll());
+    setListAdapter(adapter);
+  }
+
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.activity_munch_list, menu);
