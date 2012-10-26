@@ -24,11 +24,10 @@ public class EditRestaurant extends Activity {
 
     restaurantId = getIntent().getStringExtra(MunchList.ID_EXTRA);
 
-
     // restore form
     if (savedInstanceState != null) {
       String s;
-      if (restaurantId == null && (s = savedInstanceState.getString("name")) != null) {
+      if (restaurantId == null && (s = savedInstanceState.getString("id")) != null) {
         restaurantId = s;
       }
       if ((s = savedInstanceState.getString("name")) != null) {
@@ -111,7 +110,9 @@ public class EditRestaurant extends Activity {
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
-    outState.putString("id", restaurantId);
+    if (restaurantId != null) {
+      outState.putString("id", restaurantId);
+    }
     outState
       .putString("name",
                  ((EditText)findViewById(R.id.name)).getText().toString());
