@@ -87,6 +87,9 @@ public class MunchList extends ListActivity {
     if (item.getItemId() == R.id.add_restaurant) {
       startActivity(new Intent(this, EditRestaurant.class));
       return true;
+    } else if (item.getItemId() == R.id.menu_settings) {
+      startActivity(new Intent(this, Preferences.class));
+      return true;
     }
 
     return super.onOptionsItemSelected(item);
