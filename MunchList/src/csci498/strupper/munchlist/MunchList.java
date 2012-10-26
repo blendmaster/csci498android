@@ -3,8 +3,11 @@ package csci498.strupper.munchlist;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +21,7 @@ public class MunchList extends ListActivity {
 
   RestaurantAdapter adapter;
   private RestaurantHelper helper;
+  private SharedPreferences prefs;
 
   static class RestaurantHolder {
     private final TextView name, address;
@@ -61,7 +65,21 @@ public class MunchList extends ListActivity {
     setContentView(R.layout.main);
 
     helper = new RestaurantHelper(this);
-    adapter = new RestaurantAdapter(helper.getAll());
+    prefs = PreferenceManager.getDefaultSharedPreferences(this);
+    prefs.registerOnSharedPreferenceChangeListener(new OnSharedPreferenceChangeListener() {
+      public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                                 String key) {
+        if (key.equals("sort_order")) {
+          refresh();
+        }
+      }
+    });
+    refresh();
+  }
+
+  private void refresh() {
+    adapter = new RestaurantAdapter(
+      helper.getAll(prefs.getString("sort_order", "name")));
     setListAdapter(adapter);
   }
 
@@ -72,9 +90,7 @@ public class MunchList extends ListActivity {
 
   @Override protected void onResume() {
     super.onResume();
-    // refresh list
-    adapter = new RestaurantAdapter(helper.getAll());
-    setListAdapter(adapter);
+    refresh();
   }
 
   @Override
@@ -86,6 +102,9 @@ public class MunchList extends ListActivity {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     if (item.getItemId() == R.id.add_restaurant) {
       startActivity(new Intent(this, EditRestaurant.class));
+      return true;
+    } else if (item.getItemId() == R.id.menu_settings) {
+      startActivity(new Intent(this, Preferences.class));
       return true;
     }
 
