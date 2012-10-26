@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -72,7 +73,16 @@ public class MunchList extends ListActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.activity_munch_list, menu);
-    return true;
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.add_restaurant) {
+      startActivity(new Intent(this, EditRestaurant.class));
+      return true;
+    }
+
+    return super.onOptionsItemSelected(item);
   }
 
   public final static String ID_EXTRA = "apt.tutorial._ID";

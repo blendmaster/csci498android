@@ -23,13 +23,13 @@ public class EditRestaurant extends Activity {
 
     restaurantId = getIntent().getStringExtra(MunchList.ID_EXTRA);
 
-    if (restaurantId != null) {
-      load();
-    }
 
     // restore form
     if (savedInstanceState != null) {
       String s;
+      if (restaurantId == null && (s = savedInstanceState.getString("name")) != null) {
+        restaurantId = s;
+      }
       if ((s = savedInstanceState.getString("name")) != null) {
         ((EditText)findViewById(R.id.name)).setText(s);
       }
@@ -45,6 +45,10 @@ public class EditRestaurant extends Activity {
           ((RadioButton)findViewById(R.id.delivery)).setChecked(true);
         }
       }
+    }
+
+    if (restaurantId != null) {
+      load();
     }
 
     /// attach save listener
@@ -72,7 +76,13 @@ public class EditRestaurant extends Activity {
           break;
         }
 
-        helper.insert(r);
+        if (restaurantId == null) {
+          helper.insert(r);
+        } else {
+          helper.update(restaurantId, r);
+        }
+
+        finish();
       }
     });
   }
@@ -100,6 +110,7 @@ public class EditRestaurant extends Activity {
   }
 
   @Override public void onSaveInstanceState(Bundle outState) {
+    outState.putString("id", restaurantId);
     outState
       .putString("name",
                  ((EditText)findViewById(R.id.name)).getText().toString());
