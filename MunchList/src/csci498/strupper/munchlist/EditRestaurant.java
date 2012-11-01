@@ -168,7 +168,8 @@ public class EditRestaurant extends Activity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.viewFeed) {
+    switch (item.getItemId()) {
+    case R.id.viewFeed:
       if (isNetworkAvailable()) {
         Intent i = new Intent(this, FeedActivity.class);
         i.putExtra(FeedActivity.FEED_URL,
@@ -182,15 +183,19 @@ public class EditRestaurant extends Activity {
              .show();
       }
       return true;
-    }
-    if (item.getItemId() == R.id.setLocation) {
-      ((LocationManager)getSystemService(LOCATION_SERVICE)).requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                                                                                   0,
-                                                                                   0,
-                                                                                   onLocationChange);
+    case R.id.setLocation:
+      ((LocationManager)getSystemService(LOCATION_SERVICE))
+        .requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                                0,
+                                0,
+                                onLocationChange);
       return true;
+    case R.id.map:
+      startActivity(new Intent(this, RestaurantMap.class));
+      return true;
+    default:
+      return super.onOptionsItemSelected(item);
     }
-    return super.onOptionsItemSelected(item);
   }
 
   private boolean isNetworkAvailable() {
