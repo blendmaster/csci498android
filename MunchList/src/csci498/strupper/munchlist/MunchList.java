@@ -66,13 +66,16 @@ public class MunchList extends ListActivity {
 
     helper = new RestaurantHelper(this);
     prefs = PreferenceManager.getDefaultSharedPreferences(this);
-    prefs.registerOnSharedPreferenceChangeListener(new OnSharedPreferenceChangeListener() {
-      public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-                                                 String key) {
-        if (key.equals("sort_order")) {
-          refresh();
+    prefs.registerOnSharedPreferenceChangeListener(
+      new OnSharedPreferenceChangeListener() {
+        public void onSharedPreferenceChanged(
+          SharedPreferences sharedPreferences,
+          String key)
+        {
+          if (key.equals("sort_order")) {
+            refresh();
+          }
         }
-      }
     });
     refresh();
   }

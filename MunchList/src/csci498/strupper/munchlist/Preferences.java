@@ -23,9 +23,9 @@ public class Preferences extends PreferenceActivity {
             ComponentName component = new ComponentName(Preferences.this,
                                                         OnBoot.class);
             getPackageManager()
-                               .setComponentEnabledSetting(component,
-                                                           flag,
-                                                           PackageManager.DONT_KILL_APP);
+              .setComponentEnabledSetting(component,
+                                          flag,
+                                          PackageManager.DONT_KILL_APP);
             if (enabled) {
               OnBoot.setAlarm(Preferences.this);
             }

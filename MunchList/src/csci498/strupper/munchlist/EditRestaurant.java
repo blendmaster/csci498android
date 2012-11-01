@@ -22,16 +22,18 @@ public class EditRestaurant extends Activity {
   private String restaurantId;
   private final LocationListener onLocationChange = new LocationListener() {
     public void onLocationChanged(Location fix) {
-      helper.updateLocation(restaurantId, fix.getLatitude(),
+      helper.updateLocation(restaurantId,
+                            fix.getLatitude(),
                             fix.getLongitude());
-      ((TextView)findViewById(R.id.location)).setText(String.valueOf(fix.getLatitude())
-          + ", "
-          + String.valueOf(fix.getLongitude()));
-      ((LocationManager)getSystemService(LOCATION_SERVICE)).removeUpdates(onLocationChange);
+      ((TextView)findViewById(R.id.location))
+        .setText(String.valueOf(
+          fix.getLatitude()) + ", " + String.valueOf(fix.getLongitude()));
+      ((LocationManager)getSystemService(LOCATION_SERVICE))
+        .removeUpdates(onLocationChange);
       Toast
-           .makeText(EditRestaurant.this, "Location saved",
+        .makeText(EditRestaurant.this, "Location saved",
                      Toast.LENGTH_LONG)
-           .show();
+        .show();
     }
 
     public void onProviderDisabled(String provider) {
@@ -46,6 +48,7 @@ public class EditRestaurant extends Activity {
       // required for interface, not used
     }
   };
+
   private Double lat = 0d;
   private Double lon = 0d;
 
@@ -101,7 +104,8 @@ public class EditRestaurant extends Activity {
 
   @Override protected void onPause() {
     save();
-    ((LocationManager)getSystemService(LOCATION_SERVICE)).removeUpdates(onLocationChange);
+    ((LocationManager)getSystemService(LOCATION_SERVICE))
+      .removeUpdates(onLocationChange);
     super.onPause();
   };
 
@@ -119,7 +123,8 @@ public class EditRestaurant extends Activity {
     else {
       types.check(R.id.delivery);
     }
-    ((TextView)findViewById(R.id.location)).setText(r.getLat() + ", " + r.getLon());
+    ((TextView)findViewById(R.id.location))
+      .setText(r.getLat() + ", " + r.getLon());
 
     lat = r.getLat();
     lon = r.getLon();
@@ -183,9 +188,10 @@ public class EditRestaurant extends Activity {
       }
       else {
         Toast
-             .makeText(this, "Sorry, the Internet is not available",
-                       Toast.LENGTH_LONG)
-             .show();
+         .makeText(this,
+                   "Sorry, the Internet is not available",
+                   Toast.LENGTH_LONG)
+         .show();
       }
       return true;
     case R.id.setLocation:
@@ -199,7 +205,8 @@ public class EditRestaurant extends Activity {
       Intent i = new Intent(this, RestaurantMap.class);
       i.putExtra(RestaurantMap.EXTRA_LAT, lat);
       i.putExtra(RestaurantMap.EXTRA_LON, lon);
-      i.putExtra(RestaurantMap.EXTRA_NAME, ((EditText)findViewById(R.id.name)).getText().toString());
+      i.putExtra(RestaurantMap.EXTRA_NAME,
+                 ((EditText)findViewById(R.id.name)).getText().toString());
       startActivity(i);
       return true;
     default:

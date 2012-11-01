@@ -19,7 +19,8 @@ public class OnAlarm extends BroadcastReceiver {
     boolean useNotification = prefs.getBoolean("use_notification",
                                                true);
     if (useNotification) {
-      ((NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE))
+      ((NotificationManager)
+        context.getSystemService(Context.NOTIFICATION_SERVICE))
         .notify(NOTIFY_ME_ID,
                 new Notification.Builder(context)
                   .setContentTitle("It's time for lunch!")

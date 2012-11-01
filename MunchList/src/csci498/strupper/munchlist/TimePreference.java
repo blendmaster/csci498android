@@ -62,7 +62,8 @@ public class TimePreference extends DialogPreference {
       lastHour = picker.getCurrentHour();
       lastMinute = picker.getCurrentMinute();
 
-      String time = String.valueOf(lastHour) + ":" + String.valueOf(lastMinute);
+      String time =
+          String.valueOf(lastHour) + ":" + String.valueOf(lastMinute);
 
       if (callChangeListener(time)) {
         persistString(time);
@@ -76,7 +77,8 @@ public class TimePreference extends DialogPreference {
   }
 
   @Override
-  protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
+  protected void onSetInitialValue(boolean restoreValue,
+                                       Object defaultValue) {
     String time = null;
 
     if (restoreValue) {

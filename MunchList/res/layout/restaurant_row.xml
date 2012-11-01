@@ -10,6 +10,7 @@
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/bacon_girl"
         android:importantForAccessibility="no"
         android:src="@drawable/restaurant_icon" />
 
@@ -34,7 +35,6 @@
             android:layout_gravity="center_vertical"
             android:ellipsize="end"
             android:maxLines="1" />
-
     </LinearLayout>
 
 </LinearLayout>
