@@ -1,14 +1,19 @@
 package csci498.strupper.munchlist;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class EditRestaurant extends Activity {
 
@@ -147,6 +152,38 @@ public class EditRestaurant extends Activity {
   public void onDestroy() {
     super.onDestroy();
     helper.close();
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.activity_edit_restaurant, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId() == R.id.feed) {
+      if (isNetworkAvailable()) {
+        Intent i = new Intent(this, FeedActivity.class);
+        i.putExtra(FeedActivity.FEED_URL,
+                   ((EditText)findViewById(R.id.feed)).getText().toString());
+        startActivity(i);
+      }
+      else {
+        Toast
+             .makeText(this, "Sorry, the Internet is not available",
+                       Toast.LENGTH_LONG)
+             .show();
+      }
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  private boolean isNetworkAvailable() {
+    return
+      ((ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE))
+        .getActiveNetworkInfo() != null;
   }
 
 }
