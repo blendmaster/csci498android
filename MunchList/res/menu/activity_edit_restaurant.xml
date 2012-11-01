@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/viewFeed"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:showAsAction=""
+        android:title="View Feed"
+        android:titleCondensed="Feed">
+    </item>
+
+</menu>

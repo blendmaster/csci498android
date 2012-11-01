@@ -5,14 +5,16 @@ public class Restaurant {
   private String name = "";
   private String address = "";
   private String type = "";
+  private String feed = "";
 
   public Restaurant() { }
 
-  public Restaurant(String name, String address, String type) {
+  public Restaurant(String name, String address, String type, String feed) {
     super();
     this.name = name;
     this.address = address;
     this.type = type;
+    this.feed = feed;
   }
 
   public String getType() {
@@ -42,5 +44,13 @@ public class Restaurant {
   @Override
   public String toString() {
     return getName();
+  }
+
+  public String getFeed() {
+    return feed;
+  }
+
+  public void setFeed(String feed) {
+    this.feed = feed;
   }
 }

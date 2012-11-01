@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class RestaurantHelper extends SQLiteOpenHelper {
   private static final String DB_NAME = "munchlist.db";
-  private static final int VERSION = 1;
+  private static final int VERSION = 2;
 
   RestaurantHelper(Context context) {
     super(context, DB_NAME, null, VERSION);
@@ -21,12 +21,13 @@ public class RestaurantHelper extends SQLiteOpenHelper {
         "name TEXT," +
         "address TEXT," +
         "type TEXT," +
-        "notes TEXT);");
+        "notes TEXT," +
+        "feed TEXT);");
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    // blah, don't care
+    db.execSQL("ALTER TABLE restaurant ADD COLUMN feed TEXT");
   }
 
   public void insert(Restaurant r) {
@@ -34,6 +35,7 @@ public class RestaurantHelper extends SQLiteOpenHelper {
     cv.put("name", r.getName());
     cv.put("address", r.getAddress());
     cv.put("type", r.getType());
+    cv.put("feed", r.getFeed());
     getWritableDatabase().insert("restaurant", "name", cv);
   }
 
@@ -43,17 +45,17 @@ public class RestaurantHelper extends SQLiteOpenHelper {
     cv.put("name", r.getName());
     cv.put("address", r.getAddress());
     cv.put("type", r.getType());
+    cv.put("feed", r.getFeed());
 
     getWritableDatabase().update("restaurant", cv, "_ID=?",
                                   args);
 
   }
 
-
   public Cursor getById(String id) {
     String[] args = { id };
     return getReadableDatabase()
-        .rawQuery("SELECT _id, name, address, type FROM restaurant WHERE _ID=?",
+        .rawQuery("SELECT _id, name, address, type, feed FROM restaurant WHERE _ID=?",
                   args);
   }
 
@@ -73,6 +75,7 @@ public class RestaurantHelper extends SQLiteOpenHelper {
   public static Restaurant restaurantOf(Cursor c) {
     return new Restaurant(c.getString(1),
                            c.getString(2),
-                           c.getString(3));
+                           c.getString(3),
+                           c.getString(4));
   }
 }
