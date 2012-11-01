@@ -162,7 +162,7 @@ public class EditRestaurant extends Activity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.feed) {
+    if (item.getItemId() == R.id.viewFeed) {
       if (isNetworkAvailable()) {
         Intent i = new Intent(this, FeedActivity.class);
         i.putExtra(FeedActivity.FEED_URL,
