@@ -2,13 +2,14 @@ package csci498.strupper.munchlist;
 
 import org.mcsoxford.rss.RSSFeed;
 import org.mcsoxford.rss.RSSItem;
-import org.mcsoxford.rss.RSSReader;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,10 @@ public class FeedActivity extends ListActivity {
 
   public static final String FEED_URL = "munchlist.FEED_URL";
 
-  private static class FeedTask extends AsyncTask<String, Void, RSSFeed> {
-    private Exception e = null;
-    private FeedActivity activity = null;
-    private final RSSReader reader=new RSSReader();
+  private static class FeedHandler extends Handler {
+    FeedActivity activity = null;
 
-    FeedTask(FeedActivity activity) {
+    FeedHandler(FeedActivity activity) {
       attach(activity);
     }
 
@@ -37,28 +36,14 @@ public class FeedActivity extends ListActivity {
     }
 
     @Override
-    public RSSFeed doInBackground(String... urls) {
-
-      RSSFeed result = null;
-      try {
-        result = reader.load(urls[0]);
-      } catch (Exception e) {
-        this.e = e;
-      }
-      return (result);
-    }
-
-    @Override
-    public void onPostExecute(RSSFeed feed) {
-      if (e == null) {
-        activity.setFeed(feed);
+    public void handleMessage(Message msg) {
+      if (msg.arg1 == RESULT_OK) {
+        activity.setFeed((RSSFeed)msg.obj);
       }
       else {
-        Log.e("LunchList", "Exception parsing feed", e);
-        activity.goBlooey(e);
+        activity.goBlooey((Exception)msg.obj);
       }
     }
-
   }
 
   private class FeedAdapter extends BaseAdapter {
@@ -98,7 +83,7 @@ public class FeedActivity extends ListActivity {
 
   private static class InstanceState {
     RSSFeed feed = null;
-    FeedTask task = null;
+    FeedHandler handler = null;
   }
 
   private InstanceState state = null;
@@ -117,12 +102,17 @@ public class FeedActivity extends ListActivity {
     state = (InstanceState)getLastNonConfigurationInstance();
     if (state == null) {
       state = new InstanceState();
-      state.task = new FeedTask(this);
-      state.task.execute(getIntent().getStringExtra(FEED_URL));
+      state.handler = new FeedHandler(this);
+      Intent i = new Intent(this, FeedService.class);
+      i.putExtra(FeedService.EXTRA_URL,
+                 getIntent().getStringExtra(FEED_URL));
+      i.putExtra(FeedService.EXTRA_MESSENGER,
+                 new Messenger(state.handler));
+      startService(i);
     }
     else {
-      if (state.task != null) {
-        state.task.attach(this);
+      if (state.handler != null) {
+        state.handler.attach(this);
       }
       if (state.feed != null) {
         setFeed(state.feed);
@@ -132,9 +122,10 @@ public class FeedActivity extends ListActivity {
 
   @Override
   public Object onRetainNonConfigurationInstance() {
-    if (state.task != null) {
-      state.task.detach();
+    if (state.handler != null) {
+      state.handler.detach();
     }
+
     return (state);
   }
 

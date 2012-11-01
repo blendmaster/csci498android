@@ -26,6 +26,7 @@
         <activity android:name=".EditRestaurant"></activity>
         <activity android:name=".FeedActivity"></activity>
         <activity android:name=".Preferences"></activity>
+        <service android:name=".FeedService"></service>
     </application>
 
 </manifest>
