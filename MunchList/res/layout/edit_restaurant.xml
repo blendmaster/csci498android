@@ -56,7 +56,6 @@
 
                     <requestFocus />
                 </EditText>
-
             </TableRow>
 
             <TableRow
@@ -114,9 +113,16 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textUri" />
-
             </TableRow>
 
+            <TableRow>
+
+                <TextView android:text="@string/location_" />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:text="@string/_not_set_" />
+            </TableRow>
         </TableLayout>
     </ScrollView>
 

@@ -76,6 +76,7 @@ public class EditRestaurant extends Activity {
     else {
       types.check(R.id.delivery);
     }
+    ((EditText)findViewById(R.id.location)).setText(r.getLat() + ", " + r.getLon());
   }
 
   private void load() {
