@@ -46,6 +46,8 @@ public class EditRestaurant extends Activity {
       // required for interface, not used
     }
   };
+  private Double lat = 0d;
+  private Double lon = 0d;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -118,6 +120,9 @@ public class EditRestaurant extends Activity {
       types.check(R.id.delivery);
     }
     ((TextView)findViewById(R.id.location)).setText(r.getLat() + ", " + r.getLon());
+
+    lat = r.getLat();
+    lon = r.getLon();
   }
 
   private void load() {
@@ -191,7 +196,11 @@ public class EditRestaurant extends Activity {
                                 onLocationChange);
       return true;
     case R.id.map:
-      startActivity(new Intent(this, RestaurantMap.class));
+      Intent i = new Intent(this, RestaurantMap.class);
+      i.putExtra(RestaurantMap.EXTRA_LAT, lat);
+      i.putExtra(RestaurantMap.EXTRA_LON, lon);
+      i.putExtra(RestaurantMap.EXTRA_NAME, ((EditText)findViewById(R.id.name)).getText().toString());
+      startActivity(i);
       return true;
     default:
       return super.onOptionsItemSelected(item);
