@@ -7,9 +7,6 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -58,45 +55,12 @@ public class EditRestaurant extends Activity {
     if (restaurantId != null) {
       load();
     }
-
-    /// attach save listener
-    Button save = (Button)findViewById(R.id.save);
-    save.setOnClickListener(new OnClickListener() {
-      public void onClick(View v) {
-        Restaurant r = new Restaurant();
-        r.setName(((EditText)findViewById(R.id.name))
-                  .getText()
-                  .toString());
-        r.setAddress(((EditText)findViewById(R.id.address))
-                     .getText()
-                     .toString());
-        r.setFeed(((EditText)findViewById(R.id.feed))
-                     .getText()
-                     .toString());
-
-        RadioGroup types = (RadioGroup)findViewById(R.id.types);
-        switch (types.getCheckedRadioButtonId()) {
-        case R.id.sit_down:
-          r.setType("sit_down");
-          break;
-        case R.id.take_out:
-          r.setType("take_out");
-          break;
-        case R.id.delivery:
-          r.setType("delivery");
-          break;
-        }
-
-        if (restaurantId == null) {
-          helper.insert(r);
-        } else {
-          helper.update(restaurantId, r);
-        }
-
-        finish();
-      }
-    });
   }
+
+  @Override protected void onPause() {
+    save();
+    super.onPause();
+  };
 
   private void setFrom(Restaurant r) {
     ((EditText)findViewById(R.id.name)).setText(r.getName());
@@ -184,6 +148,38 @@ public class EditRestaurant extends Activity {
     return
       ((ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE))
         .getActiveNetworkInfo() != null;
+  }
+
+  private void save() {
+    Restaurant r = new Restaurant();
+    r.setName(((EditText)findViewById(R.id.name))
+              .getText()
+              .toString());
+    r.setAddress(((EditText)findViewById(R.id.address))
+                 .getText()
+                 .toString());
+    r.setFeed(((EditText)findViewById(R.id.feed))
+                 .getText()
+                 .toString());
+
+    RadioGroup types = (RadioGroup)findViewById(R.id.types);
+    switch (types.getCheckedRadioButtonId()) {
+    case R.id.sit_down:
+      r.setType("sit_down");
+      break;
+    case R.id.take_out:
+      r.setType("take_out");
+      break;
+    case R.id.delivery:
+      r.setType("delivery");
+      break;
+    }
+
+    if (restaurantId == null) {
+      helper.insert(r);
+    } else {
+      helper.update(restaurantId, r);
+    }
   }
 
 }
