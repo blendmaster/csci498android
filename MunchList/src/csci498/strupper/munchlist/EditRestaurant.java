@@ -36,6 +36,9 @@ public class EditRestaurant extends Activity {
       if ((s = savedInstanceState.getString("address")) != null) {
         ((EditText)findViewById(R.id.address)).setText(s);
       }
+      if ((s = savedInstanceState.getString("feed")) != null) {
+        ((EditText)findViewById(R.id.feed)).setText(s);
+      }
       if ((s = savedInstanceState.getString("type")) != null) {
         if (s.equals("sit_down")) {
           ((RadioButton)findViewById(R.id.sit_down)).setChecked(true);
@@ -60,6 +63,9 @@ public class EditRestaurant extends Activity {
                   .getText()
                   .toString());
         r.setAddress(((EditText)findViewById(R.id.address))
+                     .getText()
+                     .toString());
+        r.setFeed(((EditText)findViewById(R.id.feed))
                      .getText()
                      .toString());
 
@@ -90,6 +96,7 @@ public class EditRestaurant extends Activity {
   private void setFrom(Restaurant r) {
     ((EditText)findViewById(R.id.name)).setText(r.getName());
     ((EditText)findViewById(R.id.address)).setText(r.getAddress());
+    ((EditText)findViewById(R.id.feed)).setText(r.getFeed());
     RadioGroup types = (RadioGroup)findViewById(R.id.types);
     if (r.getType().equals("sit_down")) {
       types.check(R.id.sit_down);
@@ -119,6 +126,9 @@ public class EditRestaurant extends Activity {
     outState
       .putString("address",
                  ((EditText)findViewById(R.id.address)).getText().toString());
+    outState
+      .putString("feed",
+                 ((EditText)findViewById(R.id.feed)).getText().toString());
     RadioGroup types = (RadioGroup)findViewById(R.id.types);
     switch (types.getCheckedRadioButtonId()) {
     case R.id.sit_down:

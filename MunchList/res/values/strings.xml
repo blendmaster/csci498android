@@ -10,5 +10,6 @@
     <string name="type_">Type:</string>
     <string name="sit_down">Sit Down</string>
     <string name="delivery">Delivery</string>
+    <string name="feed">Feed:</string>
 
 </resources>
