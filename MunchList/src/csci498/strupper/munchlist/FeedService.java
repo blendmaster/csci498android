@@ -39,6 +39,8 @@ public class FeedService extends IntentService {
     } catch (Exception e) {
       Log.w("LunchList", "Exception sending results to activity", e);
     }
+
+    reader.close();
   }
 
 }

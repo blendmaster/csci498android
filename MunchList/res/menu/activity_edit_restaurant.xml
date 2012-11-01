@@ -7,5 +7,17 @@
         android:title="View Feed"
         android:titleCondensed="Feed">
     </item>
+    <item
+        android:id="@+id/setLocation"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:showAsAction="always"
+        android:title="Save Location"
+        android:titleCondensed="Locate">
+    </item>
+    <item
+        android:id="@+id/map"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:showAsAction="always"
+        android:title="Show on Map"/>
 
 </menu>

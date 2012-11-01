@@ -3,22 +3,51 @@ package csci498.strupper.munchlist;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class EditRestaurant extends Activity {
 
   private RestaurantHelper helper;
   private String restaurantId;
+  private final LocationListener onLocationChange = new LocationListener() {
+    public void onLocationChanged(Location fix) {
+      helper.updateLocation(restaurantId, fix.getLatitude(),
+                            fix.getLongitude());
+      ((TextView)findViewById(R.id.location)).setText(String.valueOf(fix.getLatitude())
+          + ", "
+          + String.valueOf(fix.getLongitude()));
+      ((LocationManager)getSystemService(LOCATION_SERVICE)).removeUpdates(onLocationChange);
+      Toast
+           .makeText(EditRestaurant.this, "Location saved",
+                     Toast.LENGTH_LONG)
+           .show();
+    }
+
+    public void onProviderDisabled(String provider) {
+      // required for interface, not used
+    }
+
+    public void onProviderEnabled(String provider) {
+      // required for interface, not used
+    }
+
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+      // required for interface, not used
+    }
+  };
+  private Double lat = 0d;
+  private Double lon = 0d;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -58,45 +87,23 @@ public class EditRestaurant extends Activity {
     if (restaurantId != null) {
       load();
     }
-
-    /// attach save listener
-    Button save = (Button)findViewById(R.id.save);
-    save.setOnClickListener(new OnClickListener() {
-      public void onClick(View v) {
-        Restaurant r = new Restaurant();
-        r.setName(((EditText)findViewById(R.id.name))
-                  .getText()
-                  .toString());
-        r.setAddress(((EditText)findViewById(R.id.address))
-                     .getText()
-                     .toString());
-        r.setFeed(((EditText)findViewById(R.id.feed))
-                     .getText()
-                     .toString());
-
-        RadioGroup types = (RadioGroup)findViewById(R.id.types);
-        switch (types.getCheckedRadioButtonId()) {
-        case R.id.sit_down:
-          r.setType("sit_down");
-          break;
-        case R.id.take_out:
-          r.setType("take_out");
-          break;
-        case R.id.delivery:
-          r.setType("delivery");
-          break;
-        }
-
-        if (restaurantId == null) {
-          helper.insert(r);
-        } else {
-          helper.update(restaurantId, r);
-        }
-
-        finish();
-      }
-    });
   }
+
+  @Override
+  public boolean onPrepareOptionsMenu(Menu menu) {
+    if (restaurantId == null) {
+      menu.findItem(R.id.setLocation).setEnabled(false);
+      menu.findItem(R.id.map).setEnabled(false);
+    }
+    return super.onPrepareOptionsMenu(menu);
+  }
+
+
+  @Override protected void onPause() {
+    save();
+    ((LocationManager)getSystemService(LOCATION_SERVICE)).removeUpdates(onLocationChange);
+    super.onPause();
+  };
 
   private void setFrom(Restaurant r) {
     ((EditText)findViewById(R.id.name)).setText(r.getName());
@@ -112,6 +119,10 @@ public class EditRestaurant extends Activity {
     else {
       types.check(R.id.delivery);
     }
+    ((TextView)findViewById(R.id.location)).setText(r.getLat() + ", " + r.getLon());
+
+    lat = r.getLat();
+    lon = r.getLon();
   }
 
   private void load() {
@@ -162,7 +173,8 @@ public class EditRestaurant extends Activity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    if (item.getItemId() == R.id.viewFeed) {
+    switch (item.getItemId()) {
+    case R.id.viewFeed:
       if (isNetworkAvailable()) {
         Intent i = new Intent(this, FeedActivity.class);
         i.putExtra(FeedActivity.FEED_URL,
@@ -176,14 +188,61 @@ public class EditRestaurant extends Activity {
              .show();
       }
       return true;
+    case R.id.setLocation:
+      ((LocationManager)getSystemService(LOCATION_SERVICE))
+        .requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                                0,
+                                0,
+                                onLocationChange);
+      return true;
+    case R.id.map:
+      Intent i = new Intent(this, RestaurantMap.class);
+      i.putExtra(RestaurantMap.EXTRA_LAT, lat);
+      i.putExtra(RestaurantMap.EXTRA_LON, lon);
+      i.putExtra(RestaurantMap.EXTRA_NAME, ((EditText)findViewById(R.id.name)).getText().toString());
+      startActivity(i);
+      return true;
+    default:
+      return super.onOptionsItemSelected(item);
     }
-    return super.onOptionsItemSelected(item);
   }
 
   private boolean isNetworkAvailable() {
     return
       ((ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE))
         .getActiveNetworkInfo() != null;
+  }
+
+  private void save() {
+    Restaurant r = new Restaurant();
+    r.setName(((EditText)findViewById(R.id.name))
+              .getText()
+              .toString());
+    r.setAddress(((EditText)findViewById(R.id.address))
+                 .getText()
+                 .toString());
+    r.setFeed(((EditText)findViewById(R.id.feed))
+                 .getText()
+                 .toString());
+
+    RadioGroup types = (RadioGroup)findViewById(R.id.types);
+    switch (types.getCheckedRadioButtonId()) {
+    case R.id.sit_down:
+      r.setType("sit_down");
+      break;
+    case R.id.take_out:
+      r.setType("take_out");
+      break;
+    case R.id.delivery:
+      r.setType("delivery");
+      break;
+    }
+
+    if (restaurantId == null) {
+      helper.insert(r);
+    } else {
+      helper.update(restaurantId, r);
+    }
   }
 
 }

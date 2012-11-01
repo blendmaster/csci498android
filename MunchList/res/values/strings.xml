@@ -11,5 +11,7 @@
     <string name="sit_down">Sit Down</string>
     <string name="delivery">Delivery</string>
     <string name="feed">Feed:</string>
+    <string name="_not_set_">(not set)</string>
+    <string name="location_">Location:</string>
 
 </resources>
