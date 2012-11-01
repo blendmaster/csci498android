@@ -13,5 +13,6 @@
     <string name="feed">Feed:</string>
     <string name="_not_set_">(not set)</string>
     <string name="location_">Location:</string>
+    <string name="ita_time_for_lunch_">It\'s time for lunch!</string>
 
 </resources>
