@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class EditRestaurant extends Activity {
@@ -23,7 +24,7 @@ public class EditRestaurant extends Activity {
     public void onLocationChanged(Location fix) {
       helper.updateLocation(restaurantId, fix.getLatitude(),
                             fix.getLongitude());
-      ((EditText)findViewById(R.id.location)).setText(String.valueOf(fix.getLatitude())
+      ((TextView)findViewById(R.id.location)).setText(String.valueOf(fix.getLatitude())
           + ", "
           + String.valueOf(fix.getLongitude()));
       ((LocationManager)getSystemService(LOCATION_SERVICE)).removeUpdates(onLocationChange);
@@ -89,7 +90,7 @@ public class EditRestaurant extends Activity {
   @Override
   public boolean onPrepareOptionsMenu(Menu menu) {
     if (restaurantId == null) {
-      menu.findItem(R.id.location).setEnabled(false);
+      menu.findItem(R.id.setLocation).setEnabled(false);
     }
     return super.onPrepareOptionsMenu(menu);
   }
@@ -115,7 +116,7 @@ public class EditRestaurant extends Activity {
     else {
       types.check(R.id.delivery);
     }
-    ((EditText)findViewById(R.id.location)).setText(r.getLat() + ", " + r.getLon());
+    ((TextView)findViewById(R.id.location)).setText(r.getLat() + ", " + r.getLon());
   }
 
   private void load() {
@@ -181,7 +182,7 @@ public class EditRestaurant extends Activity {
       }
       return true;
     }
-    if (item.getItemId() == R.id.location) {
+    if (item.getItemId() == R.id.setLocation) {
       ((LocationManager)getSystemService(LOCATION_SERVICE)).requestLocationUpdates(LocationManager.GPS_PROVIDER,
                                                                                    0,
                                                                                    0,

@@ -7,6 +7,6 @@
         android:title="View Feed"
         android:titleCondensed="Feed">
     </item>
-    <item android:id="@+id/location" android:icon="@android:drawable/ic_menu_compass" android:titleCondensed="Locate" android:title="Save Location" android:showAsAction="always"></item>
+    <item android:id="@+id/setLocation" android:icon="@android:drawable/ic_menu_compass" android:titleCondensed="Locate" android:title="Save Location" android:showAsAction="always"></item>
 
 </menu>
