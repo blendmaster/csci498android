@@ -91,6 +91,7 @@ public class EditRestaurant extends Activity {
   public boolean onPrepareOptionsMenu(Menu menu) {
     if (restaurantId == null) {
       menu.findItem(R.id.setLocation).setEnabled(false);
+      menu.findItem(R.id.map).setEnabled(false);
     }
     return super.onPrepareOptionsMenu(menu);
   }
