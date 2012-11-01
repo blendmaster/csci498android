@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class RestaurantHelper extends SQLiteOpenHelper {
   private static final String DB_NAME = "munchlist.db";
-  private static final int VERSION = 2;
+  private static final int VERSION = 3;
 
   RestaurantHelper(Context context) {
     super(context, DB_NAME, null, VERSION);
@@ -22,12 +22,20 @@ public class RestaurantHelper extends SQLiteOpenHelper {
         "address TEXT," +
         "type TEXT," +
         "notes TEXT," +
-        "feed TEXT);");
+        "feed TEXT," +
+        "lat REAL," +
+        "lon REAL);");
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    db.execSQL("ALTER TABLE restaurant ADD COLUMN feed TEXT");
+    if (oldVersion < 3) {
+      db.execSQL("ALTER TABLE restaurant ADD COLUMN lat REAL");
+      db.execSQL("ALTER TABLE restaurant ADD COLUMN lon REAL");
+    }
+    if (oldVersion < 2) {
+      db.execSQL("ALTER TABLE restaurant ADD COLUMN feed TEXT");
+    }
   }
 
   public void insert(Restaurant r) {
@@ -40,7 +48,7 @@ public class RestaurantHelper extends SQLiteOpenHelper {
   }
 
   public void update(String id, Restaurant r) {
-    String[] args = {id};
+    String[] args = { id };
     ContentValues cv = new ContentValues();
     cv.put("name", r.getName());
     cv.put("address", r.getAddress());
@@ -48,34 +56,47 @@ public class RestaurantHelper extends SQLiteOpenHelper {
     cv.put("feed", r.getFeed());
 
     getWritableDatabase().update("restaurant", cv, "_ID=?",
-                                  args);
+                                 args);
 
   }
 
   public Cursor getById(String id) {
     String[] args = { id };
     return getReadableDatabase()
-        .rawQuery("SELECT _id, name, address, type, feed FROM restaurant WHERE _ID=?",
-                  args);
+      .rawQuery("SELECT * FROM restaurant WHERE _ID=?",
+                args);
   }
 
   public Cursor getAll(String orderBy) {
-    return getReadableDatabase().rawQuery(
-      "SELECT * FROM restaurant ORDER BY " + orderBy,
-      null);
+    return getReadableDatabase()
+        .rawQuery("SELECT * FROM restaurant ORDER BY " + orderBy,
+                  null);
+  }
+
+  public void updateLocation(String id, double lat, double lon) {
+    ContentValues cv = new ContentValues();
+    String[] args = { id };
+    cv.put("lat", lat);
+    cv.put("lon", lon);
+
+    getWritableDatabase().update("restaurant", cv, "_ID=?",
+                                 args);
   }
 
   /**
    * Helper method to unmarshal a restaurant from the current row of a cursor.
    * Don't you just love databases?
    *
-   * @param c a cursor from the restaurant database.
+   * @param c
+   *          a cursor from the restaurant database.
    * @return the restaurant from the cursor's current row.
    */
   public static Restaurant restaurantOf(Cursor c) {
     return new Restaurant(c.getString(1),
-                           c.getString(2),
-                           c.getString(3),
-                           c.getString(4));
+                          c.getString(2),
+                          c.getString(3),
+                          c.getString(5),
+                          c.getDouble(6),
+                          c.getDouble(7));
   }
 }

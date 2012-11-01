@@ -6,6 +6,8 @@ public class Restaurant {
   private String address = "";
   private String type = "";
   private String feed = "";
+  private Double lat = 0d;
+  private Double lon = 0d;
 
   public Restaurant() { }
 
@@ -15,6 +17,21 @@ public class Restaurant {
     this.address = address;
     this.type = type;
     this.feed = feed;
+  }
+
+  public Restaurant(String name,
+                    String address,
+                    String type,
+                    String feed,
+                    Double lat,
+                    Double lon) {
+    super();
+    this.name = name;
+    this.address = address;
+    this.type = type;
+    this.feed = feed;
+    this.lat = lat;
+    this.lon = lon;
   }
 
   public String getType() {
@@ -52,5 +69,21 @@ public class Restaurant {
 
   public void setFeed(String feed) {
     this.feed = feed;
+  }
+
+  public Double getLat() {
+    return lat;
+  }
+
+  public void setLat(Double lat) {
+    this.lat = lat;
+  }
+
+  public Double getLon() {
+    return lon;
+  }
+
+  public void setLon(Double lon) {
+    this.lon = lon;
   }
 }
