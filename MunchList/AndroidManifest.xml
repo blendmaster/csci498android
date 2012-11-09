@@ -40,6 +40,8 @@
         <activity android:name=".RestaurantMap" >
         </activity>
 
+        <service android:name=".WidgetService" >
+        </service>
         <service android:name=".FeedService" >
         </service>
 
