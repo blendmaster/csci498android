@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 
 public class OnAlarm extends BroadcastReceiver {
@@ -26,6 +28,9 @@ public class OnAlarm extends BroadcastReceiver {
                   .setContentTitle("It's time for lunch!")
                   .setSmallIcon(R.drawable.lunchtime)
                   .setAutoCancel(true)
+                  .setSound(prefs.getString("alarm_ringtone", null) != null
+                            ? Uri.parse(prefs.getString("alarm_ringtone", null))
+                            : null, AudioManager.STREAM_ALARM)
                   .setContentIntent(
                      PendingIntent.getActivity(context,
                                                0,
