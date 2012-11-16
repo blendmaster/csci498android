@@ -1,10 +1,10 @@
 package csci498.strupper.munchlist;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
-public class MunchList extends FragmentActivity implements
+public class MunchList extends Activity implements
     MunchFragment.OnRestaurantListener {
   public final static String ID_EXTRA = "apt.tutorial._ID";
 
