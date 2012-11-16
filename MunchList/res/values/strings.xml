@@ -15,5 +15,6 @@
     <string name="ita_time_for_lunch_">It\'s time for lunch!</string>
     <string name="click_the_menu_button_to_add_a_restaurant_">Click the MENU button to add a restaurant!</string>
     <string name="bacon_girl">bacon girl</string>
+    <string name="empty">No restaurants, bro!</string>
 
 </resources>
