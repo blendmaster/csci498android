@@ -22,12 +22,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class EditFragment extends Fragment {
+  private static final String ARG_REST_ID = "apt.tutorial.ARG_REST_ID";
 
   private RestaurantHelper helper;
   private String restaurantId;
   private final LocationListener onLocationChange = new LocationListener() {
     public void onLocationChanged(Location fix) {
-      helper.updateLocation(restaurantId,
+      getHelper().updateLocation(restaurantId,
                             fix.getLatitude(),
                             fix.getLongitude());
       ((TextView)getActivity().findViewById(R.id.location))
@@ -71,13 +72,11 @@ public class EditFragment extends Fragment {
     super.onCreate(savedInstanceState);
     setHasOptionsMenu(true);
 
-
   }
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState) {
     super.onActivityCreated(savedInstanceState);
-    helper = new RestaurantHelper(getActivity());
 
     restaurantId = getActivity().getIntent().getStringExtra(MunchList.ID_EXTRA);
 
@@ -107,10 +106,33 @@ public class EditFragment extends Fragment {
         }
       }
     }
+    Bundle args = getArguments();
+    if (args != null) {
+      restaurantId = args.getString(ARG_REST_ID);
+    }
+    if (restaurantId != null) {
+      load();
+    }
+  }
+
+  private RestaurantHelper getHelper() {
+    return helper != null ? helper : (helper = new RestaurantHelper(getActivity()));
+  }
+
+  public void loadRestaurant(String restaurantId) {
+    this.restaurantId = restaurantId;
 
     if (restaurantId != null) {
       load();
     }
+  }
+
+  public static EditFragment newInstance(long id) {
+    EditFragment result = new EditFragment();
+    Bundle args = new Bundle();
+    args.putString(ARG_REST_ID, String.valueOf(id));
+    result.setArguments(args);
+    return (result);
   }
 
   @Override
@@ -124,7 +146,6 @@ public class EditFragment extends Fragment {
   @Override
   public void onResume() {
     super.onResume();
-    helper = new RestaurantHelper(getActivity());
     restaurantId = getActivity().getIntent().getStringExtra(MunchList.ID_EXTRA);
     if (restaurantId != null) {
       load();
@@ -135,8 +156,10 @@ public class EditFragment extends Fragment {
   public void onPause() {
     save();
     ((LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE))
-                                                         .removeUpdates(onLocationChange);
-    helper.close();
+                                                                               .removeUpdates(onLocationChange);
+    if (helper != null) {
+      helper.close();
+    }
     super.onPause();
   };
 
@@ -155,15 +178,15 @@ public class EditFragment extends Fragment {
       types.check(R.id.delivery);
     }
     ((TextView)getView().findViewById(R.id.location))
-                                           .setText(r.getLat() + ", "
-                                               + r.getLon());
+                                                     .setText(r.getLat() + ", "
+                                                         + r.getLon());
 
     lat = r.getLat();
     lon = r.getLon();
   }
 
   private void load() {
-    Cursor c = helper.getById(restaurantId);
+    Cursor c = getHelper().getById(restaurantId);
     c.moveToFirst();
     setFrom(RestaurantHelper.restaurantOf(c));
     c.close();
@@ -176,14 +199,16 @@ public class EditFragment extends Fragment {
     }
     outState
             .putString("name",
-                       ((EditText)getView().findViewById(R.id.name)).getText().toString());
+                       ((EditText)getView().findViewById(R.id.name)).getText()
+                                                                    .toString());
     outState
             .putString("address",
                        ((EditText)getView().findViewById(R.id.address)).getText()
-                                                             .toString());
+                                                                       .toString());
     outState
             .putString("feed",
-                       ((EditText)getView().findViewById(R.id.feed)).getText().toString());
+                       ((EditText)getView().findViewById(R.id.feed)).getText()
+                                                                    .toString());
     RadioGroup types = (RadioGroup)getView().findViewById(R.id.types);
     switch (types.getCheckedRadioButtonId()) {
     case R.id.sit_down:
@@ -210,7 +235,8 @@ public class EditFragment extends Fragment {
       if (isNetworkAvailable()) {
         Intent i = new Intent(getActivity(), FeedActivity.class);
         i.putExtra(FeedActivity.FEED_URL,
-                   ((EditText)getView().findViewById(R.id.feed)).getText().toString());
+                   ((EditText)getView().findViewById(R.id.feed)).getText()
+                                                                .toString());
         startActivity(i);
       }
       else {
@@ -223,17 +249,18 @@ public class EditFragment extends Fragment {
       return true;
     case R.id.setLocation:
       ((LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE))
-                                                           .requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                                                                                   0,
-                                                                                   0,
-                                                                                   onLocationChange);
+                                                                                 .requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                                                                                                         0,
+                                                                                                         0,
+                                                                                                         onLocationChange);
       return true;
     case R.id.map:
       Intent i = new Intent(getActivity(), RestaurantMap.class);
       i.putExtra(RestaurantMap.EXTRA_LAT, lat);
       i.putExtra(RestaurantMap.EXTRA_LON, lon);
       i.putExtra(RestaurantMap.EXTRA_NAME,
-                 ((EditText)getView().findViewById(R.id.name)).getText().toString());
+                 ((EditText)getView().findViewById(R.id.name)).getText()
+                                                              .toString());
       startActivity(i);
       return true;
     default:
@@ -243,20 +270,20 @@ public class EditFragment extends Fragment {
 
   private boolean isNetworkAvailable() {
     return ((ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE))
-                                                                        .getActiveNetworkInfo() != null;
+                                                                                              .getActiveNetworkInfo() != null;
   }
 
   private void save() {
     Restaurant r = new Restaurant();
     r.setName(((EditText)getView().findViewById(R.id.name))
-                                                 .getText()
-                                                 .toString());
+                                                           .getText()
+                                                           .toString());
     r.setAddress(((EditText)getView().findViewById(R.id.address))
-                                                       .getText()
-                                                       .toString());
+                                                                 .getText()
+                                                                 .toString());
     r.setFeed(((EditText)getView().findViewById(R.id.feed))
-                                                 .getText()
-                                                 .toString());
+                                                           .getText()
+                                                           .toString());
 
     RadioGroup types = (RadioGroup)getView().findViewById(R.id.types);
     switch (types.getCheckedRadioButtonId()) {
@@ -272,9 +299,9 @@ public class EditFragment extends Fragment {
     }
 
     if (restaurantId == null) {
-      helper.insert(r);
+      getHelper().insert(r);
     } else {
-      helper.update(restaurantId, r);
+      getHelper().update(restaurantId, r);
     }
   }
 
