@@ -124,7 +124,10 @@ public class MunchFragment extends android.app.ListFragment {
     } else if (item.getItemId() == R.id.menu_settings) {
       startActivity(new Intent(getActivity(), Preferences.class));
       return true;
+    } else if (item.getItemId() == R.id.help) {
+      startActivity(new Intent(getActivity(), HelpPage.class));
     }
+
 
     return super.onOptionsItemSelected(item);
   }

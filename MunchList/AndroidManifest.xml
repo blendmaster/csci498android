@@ -72,6 +72,11 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_provider" />
         </receiver>
+
+        <activity
+            android:name=".HelpPage"
+            android:label="@string/title_activity_help_page" >
+        </activity>
     </application>
 
 </manifest>

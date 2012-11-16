@@ -9,7 +9,14 @@
         android:id="@+id/add_restaurant"
         android:icon="@android:drawable/ic_menu_add"
         android:showAsAction="ifRoom|withText"
-        android:title="Add Restaurant" android:titleCondensed="Add">
+        android:title="Add Restaurant"
+        android:titleCondensed="Add">
+    </item>
+    <item
+        android:id="@+id/help"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="Help"
+        android:titleCondensed="Halp">
     </item>
 
 </menu>
