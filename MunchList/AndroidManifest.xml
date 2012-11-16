@@ -40,7 +40,9 @@
         <activity android:name=".RestaurantMap" >
         </activity>
 
-        <service android:name=".WidgetService" >
+        <service
+            android:name=".WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" >
         </service>
         <service android:name=".FeedService" >
         </service>
